@@ -35,12 +35,17 @@ export default function statement (invoice, plays) {
     return plays[performance.playID];
   }
 
-  for (const performance of invoice.performances) {
-    volumeCredits += Math.max(performance.audience - 30, 0);
-    if ('comedy' === playFor(performance).type) {
-      volumeCredits += Math.floor(performance.audience / 5)
+  function volumeCreditsFor(aPerformance) {
+    let result = 0;
+    result += Math.max(aPerformance.audience - 30, 0);
+    if ('comedy' === playFor(aPerformance).type) {
+      result += Math.floor(aPerformance.audience / 5)
     }
+    return result
+  }
 
+  for (const performance of invoice.performances) {
+    volumeCredits += volumeCreditsFor(performance);
     result += ` ${playFor(performance).name}: ${format(amountFor(performance)/100)} (${performance.audience} seats)\n`
     totalAmount += amountFor(performance)
   }
