@@ -1,5 +1,15 @@
 
 export default function statement (invoice, plays) {
+  let result = `Statement for ${invoice.customer}\n`
+
+  for (const performance of invoice.performances) {
+    result += ` ${playFor(performance).name}: ${usd(amountFor(performance)/100)} (${performance.audience} seats)\n`
+  }
+
+  result += `Amount owed is ${usd(totalAmount()/100)}\n`
+  result +=`You earned ${(totalVolumeCredits())} credits\n`
+  return result;
+
   function amountFor(aPerformance) {
     let result = 0;
     switch (playFor(aPerformance).type) {
@@ -21,15 +31,11 @@ export default function statement (invoice, plays) {
     }
     return result;
   }
-  let totalAmount = 0;
-  let volumeCredits = 0;
-  let result = `Statement for ${invoice.customer}\n`
   function usd(aNumber) {
     return new Intl.NumberFormat('en-us', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 2
-
     }).format(aNumber);
 
   }
@@ -46,13 +52,19 @@ export default function statement (invoice, plays) {
     return result
   }
 
-  for (const performance of invoice.performances) {
-    volumeCredits += volumeCreditsFor(performance);
-    result += ` ${playFor(performance).name}: ${usd(amountFor(performance)/100)} (${performance.audience} seats)\n`
-    totalAmount += amountFor(performance)
+  function totalAmount() {
+    let result = 0;
+    for (const performance of invoice.performances) {
+      result += amountFor(performance)
+    }
+    return result;
   }
 
-  result += `Amount owed is ${usd(totalAmount/100)}\n`
-  result +=`You earned ${volumeCredits} credits\n`
-  return result;
+  function totalVolumeCredits() {
+    let result = 0;
+    for (const performance of invoice.performances) {
+      result += volumeCreditsFor(performance);
+    }
+    return result;
+  }
 }
