@@ -1,44 +1,7 @@
-const plays =
-  {
-    "hamlet": {
-      name: "Hamlet",
-      type: "tragedy"
-    },
-    "as-like": {
-      name: "As You Like It",
-      type: "comedy"
-    },
-    "othello": {
-      name: "Othello",
-      type: "tragedy"
-    },
-  }
-
-
-const invoices = [
-  {
-    customer: 'BigCo',
-    performances: [
-      {
-        playID: 'hamlet',
-        audience: 55,
-      },
-      {
-        playID: 'as-like',
-        audience: 35,
-      },
-      {
-        playID: 'othello',
-        audience: 40,
-      },
-    ]
-  }
-]
-
-function statement (invoice, plays) {
+export default function statement (invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
-  let result = `Statement for ${invoice.customer} \n`
+  let result = `Statement for ${invoice.customer}\n`
   const format = new Intl.NumberFormat('en-us', {
     style: 'currency',
     currency: 'USD',
@@ -80,8 +43,4 @@ function statement (invoice, plays) {
   result += `Amount owed is ${format(totalAmount/100)}\n`
   result +=`You earned ${volumeCredits} credits\n`
   return result;
-}
-
-for (const invoice of invoices) {
-  console.log(statement(invoice, plays));
 }
